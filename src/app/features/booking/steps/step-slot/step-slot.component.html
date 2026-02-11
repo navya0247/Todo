@@ -1,0 +1,65 @@
+<div class="slot-container">
+    <div class="header-section">
+        <h2>Select Date & Time</h2>
+        <p class="subtitle">Choose a convenient slot for your service</p>
+    </div>
+
+    <div class="split-layout">
+        <!-- Left: Calendar -->
+        <div class="calendar-section premium-card">
+            <div class="section-title-row">
+                <span class="icon">📅</span>
+                <h3>Preferred Date</h3>
+                <div class="calendar-view-toggle">
+                    <span>Monthly</span>
+                    <span class="chevron">⌄</span>
+                </div>
+            </div>
+
+            <div class="calendar-controls">
+                <button (click)="prevMonth()" class="nav-btn">&lt;</button>
+                <div class="month-label">{{ currentDate | date:'MMMM yyyy' }}</div>
+                <button (click)="nextMonth()" class="nav-btn">&gt;</button>
+            </div>
+
+            <div class="calendar-grid">
+                <div class="weekday" *ngFor="let day of weekDays">{{ day }}</div>
+
+                <div class="day-cell" *ngFor="let day of calendarDays" [class.empty]="!day.date"
+                    [class.past]="day.isPast"
+                    [class.selected]="selectedDate && day.date && selectedDate.toDateString() === day.date.toDateString()"
+                    (click)="selectDate(day)">
+                    <span class="day-num">{{ day.date ? (day.date | date:'d') : '' }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: Time Slots -->
+        <div class="time-section premium-card">
+            <div class="section-title-row">
+                <span class="icon">🕒</span>
+                <h3>Preferred Time Slot</h3>
+            </div>
+
+            <div class="slot-groups-container">
+                <div class="slot-group"
+                    *ngFor="let group of [{label: 'Morning', slots: morningSlots}, {label: 'Afternoon', slots: afternoonSlots}, {label: 'Evening', slots: eveningSlots}]">
+                    <!-- <h4>{{ group.label }}</h4> -->
+                    <div class="slots-grid">
+                        <div class="slot-tile" *ngFor="let time of group.slots" [class.active]="selectedTime === time"
+                            (click)="selectTime(time)">
+                            <div class="radio-indicator"></div>
+                            <span class="time-label">{{ time }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="action-footer">
+        <button class="btn-confirm" [disabled]="!selectedDate || !selectedTime" (click)="confirm()">
+            Proceed to Address
+        </button>
+    </div>
+</div>

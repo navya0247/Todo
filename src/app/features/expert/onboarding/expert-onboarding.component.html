@@ -1,0 +1,283 @@
+<div class="onboarding-page">
+    <header class="onboarding-header">
+        <div class="logo-group" routerLink="/">
+            <div class="logo-icon">H</div>
+            <span class="logo-text">HouseMate</span>
+        </div>
+        <div class="auth-links">
+            <a routerLink="/login">Customer Login</a>
+            <a routerLink="/expert/login" class="active">Expert Login</a>
+        </div>
+    </header>
+
+    <main class="onboarding-content">
+        <div class="register-title-box">
+            <p class="new-user">New User?</p>
+            <h1>REGISTER NOW!</h1>
+            <p class="subtitle">To connect with verified, trained home-service experts for ASAP or scheduled services,
+                free, transparent, and reliable.</p>
+        </div>
+
+        <div class="stepper-container">
+            <div class="step-sidebar">
+                <div class="step-item" [class.active]="currentStep === 1" [class.completed]="currentStep > 1">
+                    <div class="step-number">{{ currentStep > 1 ? '✓' : '1' }}</div>
+                    <div class="step-label">Personal Information</div>
+                </div>
+                <div class="step-line" [class.active]="currentStep > 1"></div>
+                <div class="step-item" [class.active]="currentStep === 2" [class.completed]="currentStep > 2">
+                    <div class="step-number">{{ currentStep > 2 ? '✓' : '2' }}</div>
+                    <div class="step-label">Service Profile</div>
+                </div>
+                <div class="step-line" [class.active]="currentStep > 2"></div>
+                <div class="step-item" [class.active]="currentStep === 3">
+                    <div class="step-number">3</div>
+                    <div class="step-label">ID Verification</div>
+                </div>
+            </div>
+
+            <div class="step-form-content">
+                <form [formGroup]="onboardingForm" (ngSubmit)="onSubmit()">
+                    <!-- Step 1: Personal Information -->
+                    <div *ngIf="currentStep === 1" formGroupName="personalInfo" class="form-step-container">
+                        <div class="info-alert">
+                            <span>ℹ️ Ensure all information matches your identity documents for smooth
+                                verification.</span>
+                        </div>
+
+                        <div class="form-grid">
+                            <div class="form-group full-width">
+                                <label>Full Name *</label>
+                                <input type="text" formControlName="fullName"
+                                    placeholder="Enter your full name as per ID">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Mobile Number *</label>
+                                <div class="phone-input">
+                                    <span class="prefix">+91</span>
+                                    <input type="text" formControlName="mobile" placeholder="9876543210">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Date of Birth *</label>
+                                <input type="date" formControlName="dob">
+                            </div>
+
+                            <div class="form-group full-width">
+                                <label>Email Address *</label>
+                                <input type="email" formControlName="email" placeholder="example@email.com">
+                            </div>
+
+                            <div class="form-group full-width">
+                                <label>Create Password *</label>
+                                <input type="password" formControlName="password" placeholder="Min 6 characters">
+                            </div>
+
+                            <div class="form-group full-width">
+                                <label>Complete Address *</label>
+                                <textarea formControlName="address" rows="3"
+                                    placeholder="House No., Building name, Street, Landmark"></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label>City *</label>
+                                <input type="text" formControlName="city" placeholder="e.g. Mumbai">
+                            </div>
+
+                            <div class="form-group">
+                                <label>State *</label>
+                                <input type="text" formControlName="state" placeholder="e.g. Maharashtra">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Pin Code *</label>
+                                <input type="text" formControlName="pinCode" placeholder="400001">
+                            </div>
+                        </div>
+
+                        <div class="step-actions">
+                            <button type="button" class="btn-next" (click)="nextStep()">NEXT &rarr;</button>
+                            <a routerLink="/" class="back-link">Back to home</a>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Service Profile -->
+                    <div *ngIf="currentStep === 2" formGroupName="serviceProfile" class="form-step-container">
+                        <div class="section-block">
+                            <label class="section-label">Services You Offer *</label>
+                            <p class="section-sub">Select all services you can provide:</p>
+                            <div class="category-grid">
+                                <div class="cat-chip" *ngFor="let cat of serviceCategories"
+                                    [class.selected]="isServiceSelected(cat.name)" (click)="toggleService(cat.name)">
+                                    <div class="cat-icon">{{ cat.icon }}</div>
+                                    <span class="cat-name">{{ cat.name }}</span>
+                                    <div class="check-badge" *ngIf="isServiceSelected(cat.name)">✓</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="section-block">
+                            <label class="section-label">Total Experience *</label>
+                            <div class="exp-inputs">
+                                <div class="form-group">
+                                    <label>Years</label>
+                                    <select formControlName="expYears">
+                                        <option value="">Select years</option>
+                                        <option *ngFor="let y of [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]" [value]="y">
+                                            {{y}}
+                                            years</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Months</label>
+                                    <select formControlName="expMonths">
+                                        <option value="">Select months</option>
+                                        <option *ngFor="let m of [0,1,2,3,4,5,6,7,8,9,10,11]" [value]="m">{{m}} months
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="section-block">
+                            <label class="section-label">Specializations</label>
+                            <input type="text" formControlName="specializations"
+                                placeholder="e.g. Expert in deep cleaning, experienced with traditional Indian cooking">
+                        </div>
+
+                        <div class="section-block">
+                            <label class="section-label">Language Proficiency *</label>
+                            <div class="lang-grid">
+                                <div class="lang-chip" *ngFor="let lang of languages"
+                                    [class.selected]="isLanguageSelected(lang)" (click)="toggleLanguage(lang)">
+                                    {{ lang }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="section-block">
+                            <label class="section-label">Education Level *</label>
+                            <div class="edu-grid">
+                                <div class="edu-chip" *ngFor="let edu of educationLevels"
+                                    [class.selected]="onboardingForm.get('serviceProfile.education')?.value === edu"
+                                    (click)="onboardingForm.get('serviceProfile.education')?.setValue(edu)">
+                                    {{ edu }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="section-block">
+                            <label class="section-label">Availability *</label>
+                            <div class="avail-options">
+                                <label class="avail-card"
+                                    [class.selected]="onboardingForm.get('serviceProfile.availability')?.value === 'Full-time'">
+                                    <input type="radio" value="Full-time" formControlName="availability">
+                                    <div class="avail-info">
+                                        <strong>Full-time</strong>
+                                        <span>Available 8+ hours per day</span>
+                                    </div>
+                                </label>
+                                <label class="avail-card"
+                                    [class.selected]="onboardingForm.get('serviceProfile.availability')?.value === 'Part-time'">
+                                    <input type="radio" value="Part-time" formControlName="availability">
+                                    <div class="avail-info">
+                                        <strong>Part-time</strong>
+                                        <span>Available 4-5 hours per day</span>
+                                    </div>
+                                </label>
+                                <label class="avail-card"
+                                    [class.selected]="onboardingForm.get('serviceProfile.availability')?.value === 'Flexible'">
+                                    <input type="radio" value="Flexible" formControlName="availability">
+                                    <div class="avail-info">
+                                        <strong>Flexible</strong>
+                                        <span>Available on call/as needed</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="section-block">
+                            <label class="section-label">Expected Hourly Rate *</label>
+                            <div class="rate-input-box">
+                                <span class="curr">₹</span>
+                                <input type="number" formControlName="hourlyRate" placeholder="Enter amount">
+                                <span class="unit">per hour</span>
+                            </div>
+                        </div>
+
+                        <div class="section-block">
+                            <label class="section-label">About Yourself (Optional)</label>
+                            <textarea formControlName="about" rows="4"
+                                placeholder="Tell customers about your experience, skills, and why they should choose you."></textarea>
+                        </div>
+
+                        <div class="profile-verif-alert">
+                            <span>🟢 <strong>Profile Verification:</strong> Your profile will be verified by our team
+                                within 24-48 hours. Accurate information helps you get more opportunities.</span>
+                        </div>
+
+                        <div class="step-actions">
+                            <button type="button" class="btn-prev" (click)="prevStep()">&larr; PREVIOUS</button>
+                            <button type="button" class="btn-next" (click)="nextStep()">NEXT &rarr;</button>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: ID Verification -->
+                    <div *ngIf="currentStep === 3" formGroupName="verification" class="form-step-container">
+                        <div class="privacy-alert">
+                            <div class="privacy-icon">🛡️</div>
+                            <div class="privacy-text">
+                                <strong>Data Privacy</strong>
+                                <p>Your documents are encrypted and stored securely. We comply with all Indian data
+                                    protection regulations. Your information will only be used for verification
+                                    purposes.</p>
+                            </div>
+                        </div>
+
+                        <div class="form-grid mt-24">
+                            <div class="form-group">
+                                <label>Select ID Proof Type *</label>
+                                <select formControlName="idType">
+                                    <option value="Aadhaar Card">Aadhaar Card</option>
+                                    <option value="PAN Card">PAN Card</option>
+                                    <option value="Voter ID">Voter ID</option>
+                                    <option value="Driving License">Driving License</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>ID Card Number *</label>
+                                <input type="text" formControlName="idNumber" placeholder="XXXX XXXX XXXX">
+                            </div>
+
+                            <div class="form-group full-width">
+                                <label>Upload Recent Photograph *</label>
+                                <div class="upload-box" (click)="photoInput.click()"
+                                    [class.has-file]="selectedPhotoName">
+                                    <input type="file" #photoInput (change)="onFileSelected($event)" accept="image/*"
+                                        style="display: none;">
+                                    <div class="upload-icon">{{ selectedPhotoName ? '✅' : '📤' }}</div>
+                                    <p>{{ selectedPhotoName ? 'Photo Selected' : 'Upload a clear photo of yourself' }}
+                                    </p>
+                                    <span>{{ selectedPhotoName || 'JPG or PNG, Max 5MB' }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="step-actions mt-40">
+                            <button type="button" class="btn-prev" (click)="prevStep()">&larr; PREVIOUS</button>
+                            <button type="submit" class="btn-submit" [disabled]="isSubmitting">
+                                {{ isSubmitting ? 'SUBMITTING...' : 'SUBMIT DETAILS' }}
+                            </button>
+                        </div>
+                        <div class="text-center mt-12">
+                            <a routerLink="/" class="back-link">Back to home</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>

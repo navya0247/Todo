@@ -1,0 +1,221 @@
+<div class="dashboard-container">
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">
+            <span class="logo-icon">H</span>
+            <span class="logo-text">HouseMate</span>
+        </div>
+        <div class="header-tools">
+            <div class="location-selector">
+                📍 <span>Kharadi, Pune</span>
+            </div>
+            <div class="user-info" (click)="toggleProfileDropdown()">
+                <span class="user-name">{{ currentUser?.fullName || 'Sara Khan' }}</span>
+                <div class="user-avatar">👤</div>
+
+                <!-- Profile Dropdown -->
+                <div class="profile-dropdown" *ngIf="showProfileDropdown">
+                    <div class="dropdown-header">
+                        <strong>{{ currentUser?.fullName }}</strong>
+                        <p>{{ currentUser?.email }}</p>
+                    </div>
+                    <ul class="dropdown-list">
+                        <li><a href="javascript:void(0)">👤 My Profile</a></li>
+                        <li><a href="javascript:void(0)">⚙️ Settings</a></li>
+                        <li class="divider"></li>
+                        <li><a href="javascript:void(0)" (click)="logout()" class="logout-link">🚪 Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="dashboard-body">
+        <div class="main-content">
+            <!-- Hero Banner -->
+            <section class="hero-banner" [class.offline-mode]="!isOnline">
+                <div class="hero-text">
+                    <div class="status-badge" [class.online]="isOnline" (click)="toggleOnline()">
+                        <span class="dot"></span>
+                        {{ isOnline ? 'Online' : 'Offline' }} - Ready to accept jobs
+                        <div class="toggle-switch-mini" [class.active]="isOnline"></div>
+                    </div>
+                    <h1>Welcome back, <br><span>{{ currentUser?.fullName?.toUpperCase() || 'SARA KHAN' }}!</span></h1>
+                    <div class="expert-services">
+                        <p>Expert at</p>
+                        <div class="service-icons">
+                            <span class="s-icon">🧹</span>
+                            <span class="s-icon">🍳</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <img src="assets/worker-1.jpeg" alt="Expert Animation" class="expert-illustration">
+                </div>
+            </section>
+
+            <!-- Reports -->
+            <section class="reports-section">
+                <h3>My Reports</h3>
+                <div class="stats-grid">
+                    <div class="stat-card" *ngFor="let stat of stats">
+                        <div class="stat-icon-wrap">{{ stat.icon }}</div>
+                        <div class="stat-info">
+                            <p class="stat-label">{{ stat.label }}</p>
+                            <h2 class="stat-value">{{ stat.value }}</h2>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Appointments -->
+            <section class="appointments-section">
+                <div class="section-header">
+                    <h3>My Appointments</h3>
+                    <div class="filter-tools">
+                        <div class="search-wrap" [class.active]="isSearchActive">
+                            <input type="text" [(ngModel)]="searchQuery" placeholder="Search service..."
+                                *ngIf="isSearchActive" class="search-input-main">
+                            <button class="icon-btn" (click)="toggleSearch()">🔍</button>
+                        </div>
+                        <button class="icon-btn">📅</button>
+                        <select class="status-filter" [(ngModel)]="selectedFilter">
+                            <option value="All">All</option>
+                            <option value="Accepted">Accepted</option>
+                            <option value="Pending">Pending</option>
+                            <option value="Completed">Completed</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="appointments-grid">
+                    <div class="appt-card" *ngFor="let appt of filteredAppointments"
+                        [class.dimmed]="appt.statusType === 'cancelled'">
+                        <div class="appt-top">
+                            <span class="appt-service-icon">{{ appt.icon }}</span>
+                            <div class="earning-tag">₹{{ appt.earning }}/- <br><small>Earning</small></div>
+                        </div>
+                        <div class="appt-details">
+                            <p class="appt-date">{{ appt.date }}</p>
+                            <p class="appt-time">🕒 {{ appt.time }}, booked for {{ appt.duration }}</p>
+                            <p class="appt-addr">📍 {{ appt.address }}</p>
+                            <div class="appt-status-row">
+                                <span class="status-marker" [ngClass]="appt.statusType">
+                                    {{ appt.statusType === 'rejected' ? '🔴' : appt.statusType === 'accepted' ? '🟢' :
+                                    '⚪' }}
+                                </span>
+                                <span class="status-text">{{ appt.status }}</span>
+                            </div>
+                        </div>
+                        <div class="appt-footer">
+                            <a href="javascript:void(0)" class="view-details">View Details</a>
+                        </div>
+                    </div>
+                    <div class="no-results" *ngIf="filteredAppointments.length === 0">
+                        <p>No appointments found matching your search.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="pending-section">
+                <h3>Pending Requests</h3>
+                <div class="pending-list">
+                    <div class="pending-item" *ngFor="let req of pendingRequests">
+                        <div class="p-date">{{ req.date }}</div>
+                        <div class="p-time">🕒 {{ req.time }}, booked for {{ req.duration }}</div>
+                        <div class="p-addr">📍 {{ req.address }}</div>
+                        <button class="btn-take-action" (click)="openActionModal(req)">Take Action</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="calendar-section">
+                <h3>My Calendar</h3>
+                <div class="calendar-widget">
+                    <div class="cal-header">
+                        <span class="current-month">JUNE</span>
+                    </div>
+                    <div class="cal-weekdays">
+                        <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+                    </div>
+                    <div class="cal-grid">
+                        <div class="cal-day" *ngFor="let d of calendarDays" [class.active]="d.current">
+                            {{ d.day }}
+                        </div>
+                    </div>
+                </div>
+                <div class="today-schedule">
+                    <p class="today-label">Today</p>
+                    <div class="today-item">
+                        <span class="t-icon">🪴</span>
+                        <div class="t-info">
+                            <strong>Gardening</strong>
+                            <p>2:30 PM, booked for 2hrs</p>
+                            <p class="t-addr">201, Manjari Khurd, Pune - 143505</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Take Action Modal -->
+    <div class="modal-overlay" *ngIf="showActionModal" (click)="closeModal()">
+        <div class="modal-content" (click)="$event.stopPropagation()">
+            <div class="modal-header">
+                <h2>TAKE ACTION</h2>
+                <button class="close-btn" (click)="closeModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-row">
+                    <div class="modal-block service-block">
+                        <label>Service Type</label>
+                        <div class="service-badge">
+                            <span class="badge-icon">{{ selectedRequest?.icon }}</span>
+                            {{ selectedRequest?.service }}
+                        </div>
+                    </div>
+                    <div class="modal-block earning-block">
+                        <label>Earnings From This Booking</label>
+                        <div class="earnings-display">
+                            <span class="gift-icon">🎁</span>
+                            <span class="amount">₹{{ selectedRequest?.amount }}.00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-row mt-24">
+                    <div class="modal-block flex-2">
+                        <div class="check-label">
+                            <input type="checkbox" checked disabled>
+                            <strong>Schedule Details</strong>
+                        </div>
+                        <div class="details-grid">
+                            <div class="d-item"><label>Frequency:</label><span>Once</span></div>
+                            <div class="d-item"><label>Start Date:</label><span>31 January 2026</span></div>
+                            <div class="d-item"><label>Time Slot:</label><span>09:00-12:00</span></div>
+                            <div class="d-item"><label>Duration per session:</label><span>2 Hours</span></div>
+                        </div>
+                    </div>
+                    <div class="modal-block flex-1">
+                        <div class="customer-info">
+                            <label>👤 Customer Name</label>
+                            <p>{{ selectedRequest?.customer }}</p>
+                        </div>
+                        <div class="address-info mt-16">
+                            <label>📍 Service Address</label>
+                            <p>{{ selectedRequest?.address }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button class="btn-reject" (click)="handleAction('reject')">REJECT BOOKING</button>
+                    <button class="btn-accept" (click)="handleAction('accept')">ACCEPT BOOKING</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
