@@ -55,6 +55,15 @@
       ],
       "createdAt": "2026-02-11T17:32:31.792Z",
       "id": "tVi2SKh"
+    },
+    {
+      "email": "anam@gmail.com",
+      "password": "$2a$10$IulXP6O298R/3VxpjzRGn.oouCSULAXHyNFHu8cBSimzUQG48.DZ6",
+      "fullName": "Anamika",
+      "age": 78,
+      "location": "Agra",
+      "mobile": "1234567890",
+      "id": "04M5ufK"
     }
   ],
   "customerProfiles": [
@@ -119,6 +128,34 @@
       "alternateContactNumber": "7733989128",
       "customerId": "C2jOkE1",
       "id": "3e3af0a9-8557-414f-bd24-c8d501ad1fb4"
+    },
+    {
+      "label": "Home",
+      "line1": "Mumbai",
+      "line2": "",
+      "city": "Mumbai",
+      "state": "Maharashtra",
+      "postalCode": "400001",
+      "propertyType": "3 BHK",
+      "contactName": "Avani",
+      "contactNumber": "8209601338",
+      "alternateContactNumber": "7733989128",
+      "customerId": "C2jOkE1",
+      "id": "addr_17708426227582oapq"
+    },
+    {
+      "label": "Home",
+      "line1": "L",
+      "line2": "",
+      "city": "Mumbao",
+      "state": "Maharashtra",
+      "postalCode": "400001",
+      "propertyType": "2 BHK",
+      "contactName": "Anamika",
+      "contactNumber": "7733989128",
+      "alternateContactNumber": "",
+      "customerId": "04M5ufK",
+      "id": "addr_1770848050167dpx27"
     }
   ],
   "zones": [
