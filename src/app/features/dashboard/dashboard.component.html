@@ -1,0 +1,172 @@
+<div class="dashboard-container">
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">
+            <span class="logo-icon">H</span> HouseMate
+        </div>
+
+        <div class="header-center">
+            <div class="location-selector">
+                <span class="icon">📍</span>
+                <select class="location-dropdown" [value]="selectedLocation">
+                    <option *ngFor="let loc of locations" [value]="loc">{{ loc }}</option>
+                </select>
+            </div>
+            <div class="search-bar">
+                <span class="search-icon">🔍</span>
+                <input type="text" placeholder="Search for 'AC Repair'..." class="search-input">
+            </div>
+        </div>
+
+        <div class="header-right">
+            <nav class="nav-links">
+                <a href="#services" class="nav-link">Services</a>
+                <a href="#bookings" class="nav-link">My Bookings</a>
+            </nav>
+            <div class="user-profile" (click)="authService.logout()" title="Click to Logout">
+                <div class="avatar">
+                    <img src="assets/worker-1.jpeg" alt="User" class="avatar-img">
+                </div>
+                <span class="user-name">{{ currentUser?.fullName || 'User' }}</span>
+                <span class="dropdown-arrow">▼</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <!-- Welcome Section -->
+        <section class="welcome-section">
+            <div class="welcome-text">
+                <p class="sub-welcome">Welcome back,</p>
+                <h1 class="user-greeting">{{ currentUser?.fullName || 'JOHN DOE' }}!</h1>
+            </div>
+            <button class="btn-book-service-main" [routerLink]="['/book', 'Cleaning']">BOOK SERVICE →</button>
+        </section>
+
+        <!-- Upcoming Bookings Section -->
+        <section class="section upcoming-section" id="bookings">
+            <h2 class="section-title">Upcoming Bookings</h2>
+            <div class="bookings-grid-container">
+                <div class="bookings-grid">
+                    <ng-container *ngIf="upcomingBookings.length > 0; else noUpcoming">
+                        <div class="booking-card-premium" *ngFor="let booking of upcomingBookings">
+                            <div class="booking-card-header">
+                                <div class="icon-sq">
+                                    <span *ngIf="booking.serviceName?.includes('Cleaning')">🧹</span>
+                                    <span *ngIf="booking.serviceName?.includes('Cooking')">🍳</span>
+                                    <span *ngIf="booking.serviceName?.includes('Garden')">🪴</span>
+                                    <span
+                                        *ngIf="!booking.serviceName?.includes('Cleaning') && !booking.serviceName?.includes('Cooking') && !booking.serviceName?.includes('Garden')">🛠️</span>
+                                </div>
+                                <div class="price-pill">₹{{ booking.finalAmount || booking.quotedAmount }}/- to pay
+                                </div>
+                            </div>
+                            <div class="booking-card-info">
+                                <h4 class="b-service-name">{{ booking.serviceName }}</h4>
+                                <p class="b-date">{{ (booking.scheduledStartTime | date:'d MMM, EEEE') }}</p>
+                                <p class="b-time">🕒 {{ booking.scheduledTimeSlot || 'ASAP' }}</p>
+                                <p class="b-addr">📍 {{ booking.addressHint || 'Address details in summary' }}</p>
+                            </div>
+                            <div class="booking-card-actions">
+                                <a class="action-link">View Details</a>
+                                <a class="action-link secondary">Track Expert</a>
+                            </div>
+                        </div>
+                    </ng-container>
+                    <ng-template #noUpcoming>
+                        <!-- Ghost/Mock cards for visual demo if empty -->
+                        <div class="booking-card-premium" *ngFor="let i of [1,2,3]">
+                            <div class="booking-card-header">
+                                <div class="icon-sq">🧹</div>
+                                <div class="price-pill">₹299/- to pay</div>
+                            </div>
+                            <div class="booking-card-info">
+                                <p class="b-date">31 Jan, Wednesday</p>
+                                <p class="b-time">🕒 2:30 PM, booked for 2hrs</p>
+                                <p class="b-addr">📍 201, Manjari Khurd, Pune - 143505</p>
+                            </div>
+                            <div class="booking-card-actions">
+                                <a class="action-link">View Details</a>
+                                <a class="action-link secondary">Modify Booking</a>
+                            </div>
+                        </div>
+                    </ng-template>
+                </div>
+                <button class="scroll-btn next">→</button>
+            </div>
+        </section>
+
+        <!-- Popular Services -->
+        <section class="section popular-services" id="services">
+            <h2 class="section-title">Popular Services</h2>
+            <div class="popular-grid">
+                <div class="popular-card-sq"
+                    *ngFor="let cat of ['Cleaning', 'Cooking', 'Gardening', 'Cleaning', 'Cooking']">
+                    <div class="sq-icon-container">
+                        <img [src]="'assets/cat-' + cat.toLowerCase() + '.png'" [alt]="cat" class="sq-img"
+                            onerror="this.src='https://cdn-icons-png.flaticon.com/512/3233/3233816.png'">
+                    </div>
+                    <span class="sq-label">{{ cat }}</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Featured Services -->
+        <section class="section featured-services">
+            <h2 class="section-title">Featured Services</h2>
+            <div class="featured-grid">
+                <div class="featured-card-premium" *ngFor="let service of featuredServices">
+                    <div class="price-tag-badge">₹ {{ service.startingPrice }}/hr</div>
+                    <div class="featured-img-box" [style.backgroundImage]="'url(' + service.image + ')'">
+                    </div>
+                    <div class="featured-card-body">
+                        <h3>{{ service.name }}</h3>
+                        <p class="desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                            incididunt ut labore et dolore magna aliqua.</p>
+                        <p class="offer">Extra 15% off if you book it for a month</p>
+                        <button class="btn-action-book" [routerLink]="['/book', service.name]">BOOK SERVICE</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQs -->
+        <section class="section faqs-section">
+            <h2 class="section-title">FAQs</h2>
+            <div class="faq-list">
+                <div class="faq-item" *ngFor="let faq of faqs; let i = index" [class.open]="faq.isOpen">
+                    <div class="faq-question" (click)="toggleFaq(i)">
+                        <span>{{ faq.question }}</span>
+                        <span class="toggle-icon">{{ faq.isOpen ? '−' : '+' }}</span>
+                    </div>
+                    <div class="faq-answer" *ngIf="faq.isOpen">
+                        <p>{{ faq.answer }}</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer Links (Visual only) -->
+        <footer class="dashboard-footer">
+            <div class="footer-cols">
+                <div class="col">
+                    <h4>About Modimal</h4>
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Support System</a>
+                </div>
+                <div class="col">
+                    <h4>Help & Support</h4>
+                    <a href="#">Orders & Shipping</a>
+                    <a href="#">Returns & Refunds</a>
+                </div>
+                <div class="col">
+                    <h4>Join Up</h4>
+                    <a href="#">Join As Expert</a>
+                </div>
+            </div>
+            <div class="copyright">
+                © 2023 HouseMate. All Rights Reserved.
+            </div>
+        </footer>
+    </main>
+</div>

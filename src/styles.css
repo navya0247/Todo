@@ -1,0 +1,40 @@
+:root {
+  --primary: #0F172A;
+  --secondary: #3B82F6;
+  --accent: #E2E8F0;
+  --background: #F8FAFC;
+  --text-main: #1E293B;
+  --text-light: #64748B;
+  --white: #FFFFFF;
+  --font-family: 'Inter', sans-serif;
+  --transition: all 0.3s ease;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--background);
+  color: var(--text-main);
+  line-height: 1.5;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  font-family: inherit;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
