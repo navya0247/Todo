@@ -1,0 +1,56 @@
+import { Request, Response, NextFunction } from 'express';
+
+export class AppError extends Error {
+    statusCode: number;
+    status: string;
+    isOperational: boolean;
+
+    constructor(message: string, statusCode: number) {
+        super(message);
+        this.statusCode = statusCode;
+        this.status = `${statusCode}`.startsWith('4') ? 'fail' : 'error';
+        this.isOperational = true;
+
+        Error.captureStackTrace(this, this.constructor);
+    }
+}
+
+export const errorHandler = (err: any, req: Request, res: Response, next: NextFunction) => {
+    err.statusCode = err.statusCode || 500;
+    err.status = err.status || 'error';
+
+    // Temporarily force dev mode output to debug
+    // if (process.env.NODE_ENV === 'development') {
+    if (true) {
+        res.status(err.statusCode).json({
+            success: false,
+            message: err.message, // Ensure message is top-level for frontend to catch easily
+            error: {
+                code: err.statusCode,
+                message: err.message,
+                stack: err.stack,
+            }
+        });
+    } else {
+        // Production: don't leak stack traces
+        if (err.isOperational) {
+            res.status(err.statusCode).json({
+                success: false,
+                error: {
+                    code: err.statusCode,
+                    message: err.message,
+                }
+            });
+        } else {
+            // Programming or other unknown error: don't leak details
+            console.error('ERROR 💥', err);
+            res.status(500).json({
+                success: false,
+                error: {
+                    code: 500,
+                    message: 'Something went very wrong!',
+                }
+            });
+        }
+    }
+};
