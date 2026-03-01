@@ -1,6 +1,0 @@
-﻿app/dashboard/admin/users/[id]/page.tsx(123,20): error TS18048: 'userData.domains' is possibly 'undefined'.
-app/dashboard/admin/users/[id]/page.tsx(129,20): error TS18048: 'userData.techStacks' is possibly 'undefined'.
-app/dashboard/user/search/page.tsx(17,51): error TS2339: Property 'get' does not exist on type '[URLSearchParams, SetURLSearchParams]'.
-app/dashboard/user/search/page.tsx(29,28): error TS2339: Property 'get' does not exist on type '[URLSearchParams, SetURLSearchParams]'.
-app/layout.tsx(9,16): error TS2552: Cannot find name 'Inter'. Did you mean '_inter'?
-app/layout.tsx(10,24): error TS2552: Cannot find name 'JetBrains_Mono'. Did you mean '_jetbrainsMono'?
